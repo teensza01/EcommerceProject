@@ -27,20 +27,67 @@ class LoginFrame(ctk.CTkFrame):
     def show_login_page(self):
         self.clear()
 
-        ctk.CTkLabel(self, text="Login", font=("Arial", 22)).pack(pady=20)
+        # ====== Main Container (จัดให้อยู่กลางจอ) ======
+        container = ctk.CTkFrame(self, width=350, corner_radius=15)
+        container.pack(expand=True)
 
-        self.username_entry = ctk.CTkEntry(self, placeholder_text="Username")
-        self.username_entry.pack(pady=5)
+        # ====== Title ======
+        ctk.CTkLabel(
+            container,
+            text="Welcome Back",
+            font=("Arial", 24, "bold")
+        ).pack(pady=(30, 5))
 
-        self.password_entry = ctk.CTkEntry(self, placeholder_text="Password", show="*")
-        self.password_entry.pack(pady=5)
+        ctk.CTkLabel(
+            container,
+            text="Login to your account",
+            font=("Arial", 13),
+            text_color="gray"
+        ).pack(pady=(0, 20))
 
-        ctk.CTkButton(self, text="Login", command=self.login)\
-            .pack(pady=10)
+        # ====== Username ======
+        self.username_entry = ctk.CTkEntry(
+            container,
+            placeholder_text="Username",
+            width=250,
+            height=35,
+            corner_radius=10
+        )
+        self.username_entry.pack(pady=8)
 
-        ctk.CTkButton(self, text="Register", fg_color="gray",
-                      command=self.show_register_page)\
-            .pack(pady=5)
+        # ====== Password ======
+        self.password_entry = ctk.CTkEntry(
+            container,
+            placeholder_text="Password",
+            show="*",
+            width=250,
+            height=35,
+            corner_radius=10
+        )
+        self.password_entry.pack(pady=8)
+
+        # ====== Login Button ======
+        ctk.CTkButton(
+            container,
+            text="Login",
+            width=250,
+            height=40,
+            corner_radius=10,
+            command=self.login
+        ).pack(pady=(20, 10))
+
+        # ====== Register Button ======
+        ctk.CTkButton(
+            container,
+            text="Create Account",
+            width=250,
+            height=35,
+            fg_color="gray",
+            hover_color="#555555",
+            corner_radius=10,
+            command=self.show_register_page
+        ).pack(pady=(0, 25))
+
 
     def login(self):
         username = self.username_entry.get()

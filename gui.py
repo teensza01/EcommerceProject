@@ -39,37 +39,30 @@ def clear_content():
 
 
 # ---------- Main POS UI ----------
-def build_main_ui():
-    # ล้าง sidebar ก่อน (กันปุ่มซ้อน)
+def build_sidebar():
     for widget in sidebar.winfo_children():
         widget.destroy()
 
-    # แสดง layout เสมอ (ทั้ง admin และ customer)
     sidebar.grid(row=0, column=0, sticky="ns")
-    content_frame.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
 
-    # ชื่อผู้ใช้
     ctk.CTkLabel(
         sidebar,
         text=f"👤 {current_user.first_name} {current_user.last_name}",
         font=("Arial", 16)
     ).pack(pady=20)
 
-    # ปุ่มสินค้า (ทุก role เห็น)
     ctk.CTkButton(
         sidebar,
         text="📦 รายการสินค้า",
         command=show_products
     ).pack(pady=10, padx=10, fill="x")
 
-    # ปุ่มคำสั่งซื้อ (ทุก role เห็น)
     ctk.CTkButton(
         sidebar,
         text="🧾 คำสั่งซื้อ",
         command=show_orders
     ).pack(pady=10, padx=10, fill="x")
 
-    # 🔥 ปุ่มเพิ่มสินค้า (เฉพาะ admin)
     if current_user.is_admin():
         ctk.CTkButton(
             sidebar,
@@ -77,15 +70,23 @@ def build_main_ui():
             command=add_product
         ).pack(pady=10, padx=10, fill="x")
 
-    # ปุ่ม Logout (ทุก role เห็น)
     ctk.CTkButton(
         sidebar,
         text="🚪 Logout",
         fg_color="red",
         command=logout
-    ).pack(pady=50, padx=10, fill="x")
+    ).pack(pady=40, padx=10, fill="x")
 
+
+def build_content():
+    content_frame.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
+
+
+def build_main_ui():
+    build_sidebar()
+    build_content()
     show_products()
+
 
 
 
@@ -104,11 +105,11 @@ def logout():
     global current_user
     current_user = None
 
-    # ซ่อน layout
     sidebar.grid_remove()
     content_frame.grid_remove()
 
     show_login()
+
 
 
 
