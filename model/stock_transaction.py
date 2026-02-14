@@ -7,6 +7,6 @@ class StockTransaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'))
     quantity = db.Column(db.Integer)
-    type = db.Column(db.String(20))  # IN / OUT
+    type = db.Column(db.String(20)) 
     created_at = db.Column(db.DateTime)
     product = db.relationship("Product", backref="stock_transactions")

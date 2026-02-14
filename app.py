@@ -15,6 +15,8 @@ def create_app():
     from model.order import Order
     from model.order_item import OrderItem
     from model.stock_transaction import StockTransaction
+    from model.user import User
+
     
     @app.route("/products")
     def show_products():
