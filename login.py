@@ -34,7 +34,7 @@ class LoginFrame(ctk.CTkFrame):
         # ====== Title ======
         ctk.CTkLabel(
             container,
-            text="Welcome Back",
+            text="PTNK SHOP",
             font=("Arial", 24, "bold")
         ).pack(pady=(30, 5))
 
