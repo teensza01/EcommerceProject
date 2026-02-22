@@ -8,7 +8,7 @@ with app.app_context():
     db.create_all()
     print("Database created successfully!")
 
-    # 🔥 ต้องอยู่ใน context
+
     admin = User.query.filter_by(username="admin01").first()
 
     if not admin:
