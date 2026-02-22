@@ -111,47 +111,129 @@ class LoginFrame(ctk.CTkFrame):
     def show_register_page(self):
         self.clear()
 
-        ctk.CTkLabel(self, text="Register", font=("Arial", 22)).pack(pady=20)
+        # ---------- กล่องกลาง ----------
+        main_frame = ctk.CTkFrame(self, corner_radius=15)
+        main_frame.pack(expand=True, padx=40, pady=40)
 
-        self.first_name_entry = ctk.CTkEntry(self, placeholder_text="First Name")
-        self.first_name_entry.pack(pady=5)
+        ctk.CTkLabel(
+            main_frame,
+            text="Register",
+            font=("Arial", 24, "bold")
+        ).pack(pady=(20, 25))
 
-        self.last_name_entry = ctk.CTkEntry(self, placeholder_text="Last Name")
-        self.last_name_entry.pack(pady=5)
+        # ==========================
+        # First Name
+        # ==========================
+        ctk.CTkLabel(main_frame, text="ชื่อ", font=("Arial", 13))\
+            .pack(anchor="w", padx=30)
 
-        self.username_entry = ctk.CTkEntry(self, placeholder_text="Username")
-        self.username_entry.pack(pady=5)
+        self.first_name_entry = ctk.CTkEntry(main_frame, width=280)
+        self.first_name_entry.pack(pady=(5, 15))
 
-        self.password_entry = ctk.CTkEntry(self, placeholder_text="Password", show="*")
-        self.password_entry.pack(pady=5)
+        # ==========================
+        # Last Name
+        # ==========================
+        ctk.CTkLabel(main_frame, text="นามสกุล", font=("Arial", 13))\
+            .pack(anchor="w", padx=30)
 
-        ctk.CTkButton(self, text="สมัครสมาชิก", command=self.register)\
-            .pack(pady=10)
+        self.last_name_entry = ctk.CTkEntry(main_frame, width=280)
+        self.last_name_entry.pack(pady=(5, 15))
 
-        ctk.CTkButton(self, text="กลับไป Login", fg_color="gray",
-                      command=self.show_login_page)\
-            .pack(pady=5)
+        # ==========================
+        # Username
+        # ==========================
+        ctk.CTkLabel(main_frame, text="ชื่อผู้ใช้", font=("Arial", 13))\
+            .pack(anchor="w", padx=30)
 
+        self.username_entry = ctk.CTkEntry(main_frame, width=280)
+        self.username_entry.pack(pady=(5, 15))
+
+        # ==========================
+        # Password
+        # ==========================
+        ctk.CTkLabel(main_frame, text="รหัสผ่าน", font=("Arial", 13))\
+            .pack(anchor="w", padx=30)
+
+        self.password_entry = ctk.CTkEntry(main_frame, show="*", width=280)
+        self.password_entry.pack(pady=(5, 20))
+
+        # ==========================
+        # Gender
+        # ==========================
+        ctk.CTkLabel(main_frame, text="เพศ", font=("Arial", 13))\
+            .pack(anchor="w", padx=30)
+
+        self.gender_var = ctk.StringVar(value="ชาย")
+
+        gender_frame = ctk.CTkFrame(main_frame, fg_color="transparent")
+        gender_frame.pack(pady=(5, 20))
+
+        ctk.CTkRadioButton(
+            gender_frame, text="ชาย",
+            variable=self.gender_var, value="ชาย"
+        ).pack(side="left", padx=10)
+
+        ctk.CTkRadioButton(
+            gender_frame, text="หญิง",
+            variable=self.gender_var, value="หญิง"
+        ).pack(side="left", padx=10)
+        self.consent_var = ctk.BooleanVar(value=False)
+        def toggle_register_button():
+            if self.consent_var.get():
+                self.register_button.configure(state="normal")
+            else:
+                self.register_button.configure(state="disabled")
+        ctk.CTkCheckBox(
+        main_frame,
+        text="ฉันยอมรับเงื่อนไขและข้อตกลงการใช้งาน",
+        variable=self.consent_var,
+        command=toggle_register_button
+        ).pack(pady=(5, 15))
+        
+        self.register_button = ctk.CTkButton(
+            main_frame,
+            text="สมัครสมาชิก",
+            width=280,
+            height=40,
+            command=self.register,
+            state="disabled"
+        )
+        self.register_button.pack(pady=(10, 10))
+        ctk.CTkButton(
+            main_frame,
+            text="กลับไป Login",
+            width=280,
+            height=40,
+            fg_color="gray",
+            hover_color="#555555",
+            command=self.show_login_page
+        ).pack(pady=(0, 20))
+    
+    
     def register(self):
         first_name = self.first_name_entry.get()
         last_name = self.last_name_entry.get()
         username = self.username_entry.get()
         password = self.password_entry.get()
+        gender = self.gender_var.get()
 
         if not first_name or not last_name or not username or not password:
             messagebox.showerror("Error", "กรุณากรอกข้อมูลให้ครบ")
             return
-
+        if not self.consent_var.get():
+            messagebox.showerror("Error", "กรุณายอมรับเงื่อนไขและข้อตกลงการใช้งาน")
+            return
         existing_user = User.query.filter_by(username=username).first()
 
         if existing_user:
             messagebox.showerror("Error", "Username นี้มีอยู่แล้ว")
             return
-
+        
         new_user = User(
             first_name=first_name,
             last_name=last_name,
             username=username,
+            gender=gender,
             role=0   # customer เสมอ
         )
 

@@ -11,7 +11,7 @@ class User(db.Model):
 
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
-
+    # sex = db.Column(db.String(10), nullable=False)
     role = db.Column(db.Integer, default=0)  # -99 = admin, 0 = customer
     orders = db.relationship("Order", backref="user")
     def set_password(self, password):
