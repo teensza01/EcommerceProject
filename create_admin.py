@@ -16,6 +16,7 @@ with app.app_context():
             password_hash=generate_password_hash("admin123"),
             first_name="Admin",
             last_name="System",
+            sex="ชาย",
             role=1   # 1 = admin
         )
 

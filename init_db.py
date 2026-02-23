@@ -16,7 +16,8 @@ with app.app_context():
             username="admin01",
             first_name="Admin",
             last_name="System",
-            role=-99
+            sex="ชาย",
+            role=1
         )
         admin.set_password("password")
 
