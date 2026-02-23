@@ -112,14 +112,14 @@ class LoginFrame(ctk.CTkFrame):
         self.clear()
 
         # ---------- กล่องกลาง ----------
-        main_frame = ctk.CTkFrame(self, corner_radius=15)
-        main_frame.pack(expand=True, padx=40, pady=40)
+        main_frame = ctk.CTkFrame(self, corner_radius=15, width=500,height=600)
+        main_frame.pack(expand=True, fill="both", padx=5, pady=40)
 
         ctk.CTkLabel(
             main_frame,
             text="Register",
             font=("Arial", 24, "bold")
-        ).pack(pady=(20, 25))
+        ).pack(pady=(20, 5))
 
         # ==========================
         # First Name
@@ -128,7 +128,7 @@ class LoginFrame(ctk.CTkFrame):
             .pack(anchor="w", padx=30)
 
         self.first_name_entry = ctk.CTkEntry(main_frame, width=280)
-        self.first_name_entry.pack(pady=(5, 15))
+        self.first_name_entry.pack(pady=(5, 5))
 
         # ==========================
         # Last Name
@@ -137,7 +137,7 @@ class LoginFrame(ctk.CTkFrame):
             .pack(anchor="w", padx=30)
 
         self.last_name_entry = ctk.CTkEntry(main_frame, width=280)
-        self.last_name_entry.pack(pady=(5, 15))
+        self.last_name_entry.pack(pady=(5, 5))
 
         # ==========================
         # Username
@@ -146,7 +146,7 @@ class LoginFrame(ctk.CTkFrame):
             .pack(anchor="w", padx=30)
 
         self.username_entry = ctk.CTkEntry(main_frame, width=280)
-        self.username_entry.pack(pady=(5, 15))
+        self.username_entry.pack(pady=(5, 5))
 
         # ==========================
         # Password
@@ -155,7 +155,7 @@ class LoginFrame(ctk.CTkFrame):
             .pack(anchor="w", padx=30)
 
         self.password_entry = ctk.CTkEntry(main_frame, show="*", width=280)
-        self.password_entry.pack(pady=(5, 20))
+        self.password_entry.pack(pady=(5, 5))
 
         # ==========================
         # Gender
@@ -215,7 +215,7 @@ class LoginFrame(ctk.CTkFrame):
         last_name = self.last_name_entry.get()
         username = self.username_entry.get()
         password = self.password_entry.get()
-        gender = self.gender_var.get()
+        sex = self.gender_var.get()
 
         if not first_name or not last_name or not username or not password:
             messagebox.showerror("Error", "กรุณากรอกข้อมูลให้ครบ")
@@ -233,7 +233,7 @@ class LoginFrame(ctk.CTkFrame):
             first_name=first_name,
             last_name=last_name,
             username=username,
-            gender=gender,
+            sex=sex,
             role=0   # customer เสมอ
         )
 

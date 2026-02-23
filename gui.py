@@ -19,7 +19,7 @@ app.app_context().push()
 ctk.set_appearance_mode("dark")
 
 window = ctk.CTk()
-window.geometry("900x500")
+window.geometry("900x700")
 window.title("Mini POS System")
 
 window.grid_columnconfigure(1, weight=1)
