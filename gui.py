@@ -1,4 +1,5 @@
 import customtkinter as ctk
+import tkinter as tk
 from customtkinter import CTkInputDialog
 from tkinter import messagebox
 
@@ -28,7 +29,7 @@ window.grid_rowconfigure(0, weight=1)
 current_user = None
 
 # ---------- Frames ----------
-sidebar = ctk.CTkFrame(window, width=200)
+sidebar = ctk.CTkFrame(window, width=300)
 content_frame = ctk.CTkFrame(window)
 
 
@@ -86,7 +87,7 @@ def build_main_ui():
     build_sidebar()
     build_content()
     show_products()
-
+    
 
 
 
@@ -175,16 +176,71 @@ def add_product():
 def show_products():
     clear_content()
 
-    products = Product.query.all()
+    # ----- Search Bar -----
+    search_var = tk.StringVar()
 
+    search_frame = ctk.CTkFrame(content_frame)
+    search_frame.pack(fill="x", pady=10)
+
+    # ทำให้พื้นหลังโปร่ง (ถ้าไม่อยากเห็นกรอบ)
+    search_frame.configure(fg_color="transparent")
+
+    # Label
+    search_label = ctk.CTkLabel(
+        search_frame,
+        text="ค้นหาสินค้า:",
+        font=("Arial", 14)
+    )
+    search_label.pack(side="left", padx=(0, 5))
+
+    # Entry
+    search_var = tk.StringVar()
+
+    search_entry = ctk.CTkEntry(
+        search_frame,
+        textvariable=search_var,
+        width=150
+    )
+    search_entry.pack(side="left", padx=(0, 5))
+
+    # frame สำหรับแสดงสินค้า
+    product_frame = ctk.CTkScrollableFrame(
+        content_frame,
+        width=600,
+        height=400
+    )
+    product_frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+    # โหลดสินค้าครั้งแรก
+    load_products(product_frame, "")
+
+    # ค้นหาแบบ real-time
+    search_var.trace(
+        "w",
+        lambda *args: load_products(product_frame, search_var.get())
+    )
+
+def load_products(frame, search_text):
+
+    # ล้างสินค้าก่อนโหลดใหม่
+    for widget in frame.winfo_children():
+        widget.destroy()
+
+    if search_text:
+        products = Product.query.filter(
+            Product.name.ilike(f"%{search_text}%")
+        ).all()
+    else:
+        products = Product.query.all()
+    
     for p in products:
-        row = ctk.CTkFrame(content_frame)
+        row = ctk.CTkFrame(frame)
         row.pack(fill="x", pady=5, padx=5)
 
         ctk.CTkLabel(
             row,
             text=f"{p.name} | ราคา: {p.price} | คงเหลือ: {p.stock}",
-            width=300,
+            width=450,
             anchor="w"
         ).pack(side="left", padx=10)
 
@@ -242,6 +298,7 @@ def show_products():
         ctk.CTkButton(
             row,
             text="ซื้อ",
+            width=80,
             command=buy
         ).pack(side="left", padx=10)
 
@@ -280,6 +337,7 @@ def show_products():
             ctk.CTkButton(
                 row,
                 text="➕ เพิ่มสต๊อก",
+                width=100,
                 fg_color="orange",
                 command=add_stock
             ).pack(side="left", padx=5)
