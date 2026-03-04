@@ -3,7 +3,22 @@ from flask_sqlalchemy import SQLAlchemy
 from config import Config
 from extensions import db
 from model.product import Product
+import json
+import os
+SESSION_FILE = "session.json"
+def save_session(user_id):
+    with open(SESSION_FILE, "w") as f:
+        json.dump({"user_id": user_id}, f)
 
+def load_session():
+    if os.path.exists(SESSION_FILE):
+        with open(SESSION_FILE, "r") as f:
+            return json.load(f)
+    return None
+
+def clear_session():
+    if os.path.exists(SESSION_FILE):
+        os.remove(SESSION_FILE)
 
 def create_app():
     app = Flask(__name__)
@@ -16,25 +31,6 @@ def create_app():
     from model.order_item import OrderItem
     from model.stock_transaction import StockTransaction
     from model.user import User
-
-    
-    @app.route("/products")
-    def show_products():
-        products = Product.query.all()
-        return "<br>".join([
-            f"{p.name} | ราคา: {p.price} | คงเหลือ: {p.stock}"
-            for p in products
-        ])
-
-    @app.shell_context_processor
-    def make_shell_context():
-        return {"db": db, "Product": Product}
-
-
-    
-    
-    
-    
     
     return app
 

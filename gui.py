@@ -3,30 +3,28 @@ import tkinter as tk
 from customtkinter import CTkInputDialog
 from tkinter import messagebox
 
-from app import create_app
+from app import create_app,save_session, load_session, clear_session
 from extensions import db
 from model.product import Product
 from model.order import Order
 from model.order_item import OrderItem
-
+from model.user import User
 from login import LoginFrame
-
+from topnav import create_topnav
 
 # ---------- Flask ----------
 app = create_app()
 app.app_context().push()
 
 # ---------- GUI ----------
-ctk.set_appearance_mode("dark")
+ctk.set_appearance_mode("light")
 
 window = ctk.CTk()
-window.geometry("900x700")
+window.geometry("700x550")
 window.title("Mini POS System")
-
+create_topnav(window)
 window.grid_columnconfigure(1, weight=1)
 window.grid_rowconfigure(0, weight=1)
-
-current_user = None
 
 # ---------- Frames ----------
 sidebar = ctk.CTkFrame(window, width=300)
@@ -43,8 +41,7 @@ def clear_content():
 def build_sidebar():
     for widget in sidebar.winfo_children():
         widget.destroy()
-
-    sidebar.grid(row=0, column=0, sticky="ns")
+    sidebar.grid(row=0, column=0, sticky="ns",pady=10)
 
     ctk.CTkLabel(
         sidebar,
@@ -95,7 +92,7 @@ def build_main_ui():
 def on_login_success(user):
     global current_user
     current_user = user
-
+    save_session(user.id)
     login_frame.destroy()
     build_main_ui()
 
@@ -105,7 +102,7 @@ def on_login_success(user):
 def logout():
     global current_user
     current_user = None
-
+    clear_session()
     sidebar.grid_remove()
     content_frame.grid_remove()
 
@@ -180,7 +177,7 @@ def show_products():
     search_var = tk.StringVar()
 
     search_frame = ctk.CTkFrame(content_frame)
-    search_frame.pack(fill="x", pady=10)
+    search_frame.pack(fill="x",padx=20, pady=5)
 
     # ทำให้พื้นหลังโปร่ง (ถ้าไม่อยากเห็นกรอบ)
     search_frame.configure(fg_color="transparent")
@@ -240,7 +237,7 @@ def load_products(frame, search_text):
         ctk.CTkLabel(
             row,
             text=f"{p.name} | ราคา: {p.price} | คงเหลือ: {p.stock}",
-            width=450,
+            width=250,
             anchor="w"
         ).pack(side="left", padx=10)
 
@@ -372,9 +369,15 @@ def show_orders():
             font=("Arial", 14)
         ).pack(side="left", padx=10)
 
+session = load_session()
 
-
-
-# ---------- Start App ----------
-show_login()
+if session:
+    user = db.session.get(User, session["user_id"])
+    if user:
+        current_user = user
+        build_main_ui()
+    else:
+        show_login()
+else:
+    show_login()
 window.mainloop()
