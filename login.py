@@ -28,8 +28,9 @@ class LoginFrame(ctk.CTkFrame):
         self.clear()
 
         # ====== Main Container (จัดให้อยู่กลางจอ) ======
-        container = ctk.CTkFrame(self, width=350, corner_radius=15)
+        container = ctk.CTkFrame(self, width=600,height=400, corner_radius=15)
         container.pack(expand=True)
+        container.pack_propagate(False)
 
         # ====== Title ======
         ctk.CTkLabel(
@@ -45,7 +46,7 @@ class LoginFrame(ctk.CTkFrame):
             text_color="gray"
         ).pack(pady=(0, 20))
 
-        # ====== Username ======
+       # ====== Username ======
         self.username_entry = ctk.CTkEntry(
             container,
             placeholder_text="Username",
@@ -54,6 +55,9 @@ class LoginFrame(ctk.CTkFrame):
             corner_radius=10
         )
         self.username_entry.pack(pady=8)
+
+        # โฟกัสเริ่มต้น
+        self.username_entry.focus()
 
         # ====== Password ======
         self.password_entry = ctk.CTkEntry(
@@ -67,15 +71,31 @@ class LoginFrame(ctk.CTkFrame):
         self.password_entry.pack(pady=8)
 
         # ====== Login Button ======
-        ctk.CTkButton(
+        self.login_button = ctk.CTkButton(
             container,
             text="Login",
             width=250,
             height=40,
             corner_radius=10,
             command=self.login
-        ).pack(pady=(20, 10))
+        )
+        self.login_button.pack(pady=(20, 10))
 
+        # ====================================
+        # 🔥 Bind ปุ่ม Enter แบบมืออาชีพ
+        # ====================================
+
+        # Enter ที่ Username → ไป Password
+        self.username_entry.bind(
+            "<Return>",
+            lambda event: self.password_entry.focus()
+        )
+
+        # Enter ที่ Password → Login
+        self.password_entry.bind(
+            "<Return>",
+            lambda event: self.login()
+        )
         # ====== Register Button ======
         ctk.CTkButton(
             container,
