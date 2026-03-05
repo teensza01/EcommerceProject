@@ -41,3 +41,13 @@ def create_app():
 if __name__ == "__main__":
     app = create_app()
     app.run(debug=True)
+
+with app.app_context():
+    db.create_all()
+    print("--- สร้าง Database และ Table สำเร็จแล้ว! ---")
+
+# ตรงนี้แหละครับคือคำสั่งที่ใช้สร้างตาราง
+with app.app_context():
+    print("กำลังสร้างตารางใน Database...")
+    db.create_all()
+    print("สร้างเสร็จแล้ว! ไฟล์ ecommerce.db จะปรากฏขึ้นมาครับ")
